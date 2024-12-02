@@ -1,0 +1,11 @@
+O modelo desenvolvido apresentou um desempenho satisfatório na tarefa de classificação de imagens de rostos, com um F1-Score que indica um bom equilíbrio entre as classes. A análise das imagens classificadas incorretamente revelou que o modelo teve dificuldades com imagens que apresentavam condições de iluminação desfavoráveis e ângulos de captura não convencionais.
+
+Algumas limitações do projeto incluem:
+
+O dataset pode estar desbalanceado em termos de número de imagens masculinas e femininas, o que pode ter influenciado os resultados.
+A qualidade das imagens no dataset pode variar, afetando a capacidade do modelo de generalizar.
+Para melhorar o desempenho do modelo, futuras iterações podem incluir:
+
+Aumentar o tamanho do dataset com mais imagens.
+Experimentar diferentes arquiteturas de CNN e técnicas de data augmentation.
+Ajustar os hiperparâmetros do modelo para otimizar o treinamento.
