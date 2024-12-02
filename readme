@@ -1,0 +1,49 @@
+# Classificação de Imagens de Faces com Redes Convolucionais
+
+## Objetivo do Projeto
+O objetivo deste projeto é desenvolver um modelo de rede neural convolucional (CNN) para classificar imagens de rostos de acordo com o sexo biológico (masculino ou feminino) utilizando o dataset "CUHK Face Sketch Database (CUFS)". O projeto abrange desde a anotação dos dados, passando pela construção de um modelo CNN autoral, até a análise dos resultados obtidos. Espera-se que o modelo demonstre um desempenho satisfatório na classificação das imagens, com uma boa taxa de precisão e um equilíbrio entre as classes, avaliado através de métricas como F1-Score e AUC-ROC.
+
+## Instruções para Execução do Código
+
+### Requisitos de Software
+- Python 3.x
+- TensorFlow 2.x
+- NumPy
+- Matplotlib
+- Pillow
+- scikit-learn
+
+### Dependências Necessárias
+Você pode instalar as dependências necessárias utilizando `pip`. Execute o seguinte comando:
+
+```bash
+pip install tensorflow numpy matplotlib pillow scikit-learn
+Passo a Passo para Executar o Código
+Clone o Repositório: Abra o terminal e clone o repositório usando o comando:
+
+bash
+
+Verify
+
+Open In Editor
+Edit
+Copy code
+git clone https://github.com/seu_usuario/nome_do_repositorio.git
+cd nome_do_repositorio
+Prepare o Dataset:
+
+Baixe o dataset "CUHK Face Sketch Database (CUFS)" e coloque as imagens na pasta photos dentro do repositório.
+Anote os Dados:
+
+Execute o script de anotação de dados para rotular as imagens como 0 (Masculino) ou 1 (Feminino). Certifique-se de seguir as instruções que aparecem no terminal.
+Execute o Código:
+
+Após a anotação, execute o script principal para treinar o modelo:
+bash
+
+Verify
+
+Open In Editor
+Edit
+Copy code
+python nome_do_script.py
