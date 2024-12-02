@@ -1,0 +1,85 @@
+import os
+from PIL import Image
+
+# Caminho para as imagens
+image_folder = 'photos'
+labels = []  # Lista para armazenar os rótulos
+image_paths = []  # Lista para armazenar os caminhos das imagens
+
+# Anotação manual
+for filename in os.listdir(image_folder):
+    if filename.endswith('.jpg'):
+        label = input(f'Qual é o rótulo para {filename}? (0 para Masculino, 1 para Feminino): ')
+        labels.append(int(label))
+        image_paths.append(os.path.join(image_folder, filename))
+import numpy as np
+
+def preprocess_images(image_paths):
+    processed_images = []
+    for img_path in image_paths:
+        img = Image.open(img_path)
+        img = img.resize((250, 200))
+        img_array = np.array(img) / 255.0  # Normalização
+        processed_images.append(img_array)
+    return np.array(processed_images)
+
+images = preprocess_images(image_paths)
+from sklearn.model_selection import train_test_split
+
+# Divisão dos dados
+X_train, X_temp, y_train, y_temp = train_test_split(images, labels, test_size=0.50, random_state=23)
+X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.40, random_state=23)
+import tensorflow as tf
+from tensorflow.keras import layers, models
+
+def create_model():
+    model = models.Sequential()
+    model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(250, 200, 3)))
+    model.add(layers.MaxPooling2D((2, 2)))
+    model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+    model.add(layers.MaxPooling2D((2, 2)))
+    model.add(layers.Conv2D(128, (3, 3), activation='relu'))
+    model.add(layers.MaxPooling2D((2, 2)))
+    model.add(layers.Flatten())
+    model.add(layers.Dense(128, activation='relu'))
+    model.add(layers.Dense(1, activation='sigmoid'))  # Saída binária
+    return model
+
+model = create_model()
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+history = model.fit(X_train, y_train, epochs=20, validation_data=(X_val, y_val))
+from sklearn.metrics import f1_score, roc_curve, auc
+import matplotlib.pyplot as plt
+
+y_pred = model.predict(X_test)
+y_pred_classes = (y_pred > 0.5).astype(int)
+
+# F1-Score
+f1 = f1_score(y_test, y_pred_classes)
+
+# Curva ROC
+fpr, tpr, _ = roc_curve(y_test, y_pred)
+roc_auc = auc(fpr, tpr)
+
+# Plotando a curva ROC
+plt.figure()
+plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
+plt.plot (0, 0), color='navy', lw=2, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic')
+plt.legend(loc='lower right')
+plt.show()
+incorrect_indices = np.where(y_pred_classes != y_test)[0]
+incorrect_images = X_test[incorrect_indices]
+incorrect_labels = y_test[incorrect_indices]
+predicted_labels = y_pred_classes[incorrect_indices]
+
+# Visualizando as imagens incorretamente classificadas
+for i in range(len(incorrect_images)):
+    plt.imshow(incorrect_images[i])
+    plt.title(f'Predito: {predicted_labels[i]}, Real: {incorrect_labels[i]}')
+    plt.axis('off')
+    plt.show()
